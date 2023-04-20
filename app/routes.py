@@ -27,3 +27,4 @@ def handle_planets():
             "has humans": planet.has_humans
         })
     return jsonify(response)
+#test
