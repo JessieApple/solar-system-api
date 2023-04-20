@@ -12,5 +12,8 @@ planet2 = Planet(2, "Venus","Super hot!")
 planet3 = Planet(3, "Earth","Great place with oxgen!",True)
 
 planets = [planet1,planet2,planet3]
-        
+
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
+
+
     
