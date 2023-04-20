@@ -7,4 +7,10 @@ class Planet:
         self.description = description
         self.has_humans = has_humans 
         
+planet1 = Planet(1,"Mars","Big and red!")
+planet2 = Planet(2, "Venus","Super hot!")
+planet3 = Planet(3, "Earth","Great place with oxgen!",True)
+
+planets = [planet1,planet2,planet3]
+        
     
