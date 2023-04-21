@@ -31,13 +31,21 @@ def handle_planets():
 
 @planets_bp.route("/<id>",methods = ['GET'])
 def one_planet(id):
+    try: 
+        id = int(id)
+    except ValueError:
+        return {"message": f"{id} is an invalid planet id"}, 400
     for planet in planets:
-        if planet.id == int(id):
+        if planet.id == id:
             return {
             "id": planet.id,
             "name": planet.name,
             "description": planet.description,
             "has humans": planet.has_humans
             }, 200 
+    
+    return {
+        "message": f"planet id {id} not found"
+    }, 404
 
     
