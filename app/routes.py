@@ -28,3 +28,16 @@ def handle_planets():
         })
     return jsonify(response)
 #test
+
+@planets_bp.route("/<id>",methods = ['GET'])
+def one_planet(id):
+    for planet in planets:
+        if planet.id == int(id):
+            return {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "has humans": planet.has_humans
+            }, 200 
+
+    
