@@ -29,18 +29,20 @@ def add_planet():
     
     return make_response(f"Planet {new_planet.name} successfully created", 201)
 
-# @planets_bp.route("", methods=["GET"])
-# def handle_planets():
-#     response = []
-#     for planet in planets:
-#         response.append({
-#             "id": planet.id,
-#             "name": planet.name,
-#             "description": planet.description,
-#             "has humans": planet.has_humans
-#         })
-#     return jsonify(response)
-#test
+@planets_bp.route("", methods=["GET"])
+def read_all_planets():
+    planets_response = []
+    planets = Planet.query.all()
+    for planet in planets:
+        planets_response.append({
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "has_humans": planet.has_humans
+        })
+    return jsonify(planets_response)
+
+
 
 # @planets_bp.route("/<id>",methods = ['GET'])
 # def one_planet(id):
