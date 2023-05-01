@@ -78,4 +78,18 @@ def update_one_planet(id):
             "message":'planet has been updated successfully' 
         }, 200
 
-    
+
+@planets_bp.route("/<id>", methods=["DELETE"])
+def delete_one_planet(id):
+    try: 
+        id = int(id)
+    except ValueError:
+        return {"message": f"{id} is an invalid planet id"}, 400
+    planet = Planet.query.get_or_404(id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return {
+        "message": "planet has been successfully deleted"
+    }, 200
