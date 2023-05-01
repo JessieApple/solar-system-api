@@ -59,4 +59,23 @@ def read_one_planet(id):
             "has_humans": planet.has_humans
         }, 200
 
+@planets_bp.route("/<id>",methods = ['PUT'])
+def update_one_planet(id):
+    try: 
+        id = int(id)
+    except ValueError:
+        return {"message": f"{id} is an invalid planet id"}, 400
+    planet = Planet.query.get_or_404(id)
+    
+    request_body = request.get_json()
+    planet.name = request_body['name']
+    planet.description = request_body['description']
+    planet.has_humans = request_body["has_humans"]
+    
+    db.session.commit()
+    
+    return {
+            "message":'planet has been updated successfully' 
+        }, 200
+
     
