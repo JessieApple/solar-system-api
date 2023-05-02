@@ -1,19 +1,7 @@
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.planet import Planet
 
-# class Planet:
-#     def __init__(self,id,name,description,has_humans=False):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.has_humans = has_humans 
-        
-# planet1 = Planet(1,"Mars","Big and red!")
-# planet2 = Planet(2, "Venus","Super hot!")
-# planet3 = Planet(3, "Earth","Great place with oxgen!",True)
-
-# planets = [planet1,planet2,planet3]
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
@@ -28,6 +16,7 @@ def add_planet():
     db.session.commit() 
     
     return make_response(f"Planet {new_planet.name} successfully created", 201)
+
 
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
@@ -49,14 +38,9 @@ def read_all_planets():
     return jsonify(planets_response)
 
 
-
 @planets_bp.route("/<id>",methods = ['GET'])
 def read_one_planet(id):
-    try: 
-        id = int(id)
-    except ValueError:
-        return {"message": f"{id} is an invalid planet id"}, 400
-    planet = Planet.query.get_or_404(id)
+    planet = validate_planet(id)
     
     return {
             "id": planet.id,
@@ -65,13 +49,10 @@ def read_one_planet(id):
             "has_humans": planet.has_humans
         }, 200
 
+
 @planets_bp.route("/<id>",methods = ['PUT'])
 def update_one_planet(id):
-    try: 
-        id = int(id)
-    except ValueError:
-        return {"message": f"{id} is an invalid planet id"}, 400
-    planet = Planet.query.get_or_404(id)
+    planet = validate_planet(id)
     
     request_body = request.get_json()
     planet.name = request_body['name']
@@ -87,11 +68,7 @@ def update_one_planet(id):
 
 @planets_bp.route("/<id>", methods=["DELETE"])
 def delete_one_planet(id):
-    try: 
-        id = int(id)
-    except ValueError:
-        return {"message": f"{id} is an invalid planet id"}, 400
-    planet = Planet.query.get_or_404(id)
+    planet = validate_planet(id)
 
     db.session.delete(planet)
     db.session.commit()
@@ -99,3 +76,12 @@ def delete_one_planet(id):
     return {
         "message": "planet has been successfully deleted"
     }, 200
+
+
+def validate_planet(id):
+    try: 
+        id = int(id)
+    except ValueError:
+        abort(make_response({"message": f"{id} is an invalid planet id"}, 400))
+    planet = Planet.query.get_or_404(id)
+    return planet
