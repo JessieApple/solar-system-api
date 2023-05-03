@@ -21,3 +21,11 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+@pytest.fixture
+def two_planets(app):
+    earth = Planet(name="Earth", description="Kinda cool", has_humans=True)
+    pluto = Planet(name="Pluto", description="It's a planet", has_humans=False)
+
+    db.session.add_all([earth, pluto])
+    db.session.commit()
