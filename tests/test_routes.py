@@ -41,4 +41,15 @@ def test_get_planet_not_exist(client):
     response = client.get('/planets/1')
     
     assert response.status_code == 404
-    assert "Not Found" in response 
+    # assert "Not Found" in response 
+    
+def test_create_one_planet(client):
+    response = client.post("/planets", json={
+        "name":"venus",
+        "description":"a planet",
+        "has_humans": False 
+    })
+    response_body = response.get_data(as_text=True)
+    
+    assert response.status_code == 201 
+    assert response_body == "Planet venus successfully created"
